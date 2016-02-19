@@ -5,64 +5,73 @@
  */
 var bot = require('../telegram-bot/index');
 var xmlrpc = require('xmlrpc');
-var fs = require('fs')
-var path = require('path');
+var codice = null;
+var config = require('./config.js');
+
+var clientAutenticazione = xmlrpc.createClient({
+  host: 'muovi.roma.it',
+  port: 80,
+  path: '/ws/xml/autenticazione/1',
+});
+
+var client = xmlrpc.createClient({
+  host: 'muovi.roma.it',
+  port: 80,
+  path: '/ws/xml/paline/7'
+});
 
 function autenticazioneAtac(cb) {
-  var filePath = path.join(__dirname, 'atacToken.txt');
-  fs.readFile(filePath, 'utf8', function (err,data) {
-  if (err) {
-    return console.log(err);
-  }
-    var client = xmlrpc.createClient({
-    host: 'muovi.roma.it',
-    port: 80,
-    path: '/ws/xml/autenticazione/1',
-  });
-  client.methodCall('autenticazione.Accedi', [data.toString(), 'marco93'], function(error, value) {
+  var token = config.atacToken;
+  clientAutenticazione.methodCall('autenticazione.Accedi', [token, 'marco93'], function(error, value) {
+    codice = value;
     cb(value);
   });
-});
 }
 
 module.exports = {
   getTempiPaletta: function(cb) {
-  var client = xmlrpc.createClient({
-    host: 'muovi.roma.it',
-    port: 80,
-    path: '/ws/xml/paline/7'
-  });
   var palina = arguments[1];
-  var tokenAtac = autenticazioneAtac(function(tokenAtac) {
-  client.methodCall('paline.Previsioni', [tokenAtac, palina, 'IT'], function(error, value) {
-    	cb(value);
-    });
-    })
+  client.methodCall('paline.Previsioni', [codice, palina, 'IT'], function(error, value) {
+    if(error && error.code == 824) {
+      var tokenAtac = autenticazioneAtac(function(tokenAtac) {
+        client.methodCall('paline.Previsioni', [tokenAtac, palina, 'IT'], function(error, value) {
+            cb(value);
+        });
+      })
+    }
+    else {
+      cb(value);
+    }
+  });
   },
   getCapolinea: function(cb) {
-  var client = xmlrpc.createClient({
-    host: 'muovi.roma.it',
-    port: 80,
-    path: '/ws/xml/paline/7'
-  });
   var ricerca = arguments[1];
-  var tokenAtac = autenticazioneAtac(function(tokenAtac) {
-    client.methodCall('paline.SmartSearch', [tokenAtac, ricerca], function(error, value) {
+  client.methodCall('paline.SmartSearch', [codice, ricerca], function(error, value) {
+    if(error && error.code == 824) {
+      var tokenAtac = autenticazioneAtac(function(tokenAtac) {
+        client.methodCall('paline.SmartSearch', [tokenAtac, ricerca], function(error, value) {
+            cb(value);
+        });
+      })
+    }
+    else {
       cb(value);
-    });
-    })
+    }
+  });
   },
   getFermate: function(cb) {
-  var client = xmlrpc.createClient({
-    host: 'muovi.roma.it',
-    port: 80,
-    path: '/ws/xml/paline/7'
-  });
   var ricerca = arguments[1];
-  var tokenAtac = autenticazioneAtac(function(tokenAtac) {
-    client.methodCall('paline.Fermate', [tokenAtac, ricerca, 'IT'], function(error, value) {
+  client.methodCall('paline.Fermate', [codice, ricerca, 'IT'], function(error, value) {
+    if(error && error.code == 824) {
+      var tokenAtac = autenticazioneAtac(function(tokenAtac) {
+        client.methodCall('paline.Fermate', [tokenAtac, ricerca, 'IT'], function(error, value) {
+            cb(value);
+        });
+      })
+    }
+    else {
       cb(value);
-    });
-    })    
+    }
+  });
   }
-};
+}
