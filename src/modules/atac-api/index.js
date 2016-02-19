@@ -22,7 +22,8 @@ var client = xmlrpc.createClient({
 
 function autenticazioneAtac(cb) {
   var token = config.atacToken;
-  clientAutenticazione.methodCall('autenticazione.Accedi', [token, 'marco93'], function(error, value) {
+  var user = config.user;
+  clientAutenticazione.methodCall('autenticazione.Accedi', [token, user], function(error, value) {
     codice = value;
     cb(value);
   });
