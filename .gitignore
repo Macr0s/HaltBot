@@ -35,3 +35,4 @@ node_modules
 Library.txt
 atacToken.txt
 telegramToken.txt
+.DS_Store
