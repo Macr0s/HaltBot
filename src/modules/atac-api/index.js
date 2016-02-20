@@ -1,8 +1,3 @@
-/**
- * TODO: Questa dovrebbe diventare una classe strutturata, che offra metodi del tipo:
- * getTempiPaletta(paletta)
- * getTempiLinea(linea)
- */
 var bot = require('../telegram-bot/index');
 var xmlrpc = require('xmlrpc');
 var codice = null;

@@ -4,7 +4,7 @@ var mongo = require('../model/model');
 
 module.exports = {
 	previsioneLinea: function(msg, match) {
-		var linea = msg.text;
+		var linea = msg.text.toUpperCase();
 		linea = linea.substring(1, linea.length);
 		var direzioni = []
 		var bus_stop = []
