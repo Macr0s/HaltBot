@@ -19,11 +19,12 @@ module.exports = function previsionePaletta(msg, match) {
 		    	bot.sendMessage(msg.chat.id, "Nessuna informazione disponibile");
 		    }
 		    else {
+		    	mess = "🚩 "+temp[0].nome_palina+".\n";
 			    for (var element in temp) {
 			    	if (temp[element]["distanza_fermate"] == 1) 
-			    		mess = mess+temp[element].linea+" : In arrivo.\n";
+			    		mess = mess+"🚌 "+temp[element].linea+" :\tIn arrivo.\n";
 			    	else 
-			    		mess = mess+temp[element].linea+" : "+temp[element]["distanza_fermate"]+" fermate attesa "+ temp[element]["tempo_attesa"]+" minuti."+"\n";
+			    		mess = mess+"🚌 "+temp[element].linea+" :\t"+temp[element]["distanza_fermate"]+" fermate attesa "+ temp[element]["tempo_attesa"]+" minuti."+"\n";
 			    }
 			    mongo({telegramId:msg.from.id.toString(), name:msg.chat.first_name+" "+msg.chat.last_name, command:[{name:"previsione_paletta"+paletta.toString(), date: new Date()}]}, msg.from.id);
 			    bot.sendMessage(msg.chat.id, mess);
