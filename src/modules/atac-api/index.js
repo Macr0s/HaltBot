@@ -1,7 +1,7 @@
 var bot = require('../telegram-bot/index');
 var xmlrpc = require('xmlrpc');
 var codice = null;
-var config = require('./config.js');
+var config = require('../../config.js');
 
 var clientAutenticazione = xmlrpc.createClient({
   host: 'muovi.roma.it',
