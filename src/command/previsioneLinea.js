@@ -7,7 +7,7 @@ module.exports = {
 		var linea = msg.text.toUpperCase();
 		linea = linea.substring(1, linea.length);
 		var direzioni = []
-		var bus_stop = []
+		var all_capolinea = []
 
 		var value = atac.getCapolinea(function(value) {
 			percorsi = value.risposta.percorsi;
@@ -17,9 +17,9 @@ module.exports = {
 			else {
 				mongo({telegramId:msg.from.id.toString(), name:msg.chat.first_name+" "+msg.chat.last_name, command:[{name:"previsione_linea"+linea, date: new Date()}]}, msg.from.id);
 				for(var element in percorsi) {
-					if(percorsi[element].id_linea == linea && direzioni.length != 2) {
+					if(percorsi[element].id_linea == linea) {
+						all_capolinea.push([percorsi[element].id_percorso+" - "+ percorsi[element].direzione + " "+ percorsi[element].carteggio_dec]);
 						direzioni.push(percorsi[element].direzione + " "+ percorsi[element].carteggio_dec);
-						bus_stop.push(parseInt(percorsi[element].id_percorso));
 					}
 				}
 
@@ -35,7 +35,7 @@ module.exports = {
 				else {
 					bot.sendMessage(msg.chat.id, 'Scegli la direzione:\n1) '+direzioni[0]+'\n2) '+direzioni[1], {
 			        	reply_markup: JSON.stringify({
-			            keyboard: [ [ bus_stop[0]+" - "+direzioni[0], bus_stop[1]+" - "+direzioni[1]] ],
+			            keyboard: all_capolinea,
 			            resize_keyboard: true,
 			            one_time_keyboard: true
 			        	})
