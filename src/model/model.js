@@ -53,10 +53,6 @@ module.exports = {
 			var newPreferiti = user[0];
 			if(newPreferiti.preferiti.indexOf(preferito) == -1){
 				newPreferiti.preferiti.push(preferito);
-				var userObj = {telegramId: user[0].telegramId, name: user[0].name, command: user[0].command, preferiti: newPreferiti};
-				User.remove(user[0], function(err){
-					if(err) console.log(err);
-				});
 				newPreferiti.save(function(err, data) {
 					if(err) console.log(err);
 					else console.log("saved", data);			
@@ -76,7 +72,8 @@ module.exports = {
 			var preferiti = user[0].preferiti;
 			for(i=0; i<preferiti.length; i++) {
 				if(preferiti[i].indexOf(preferito) > -1) {
-					temp.preferiti.splice(i, i+1);
+					temp.preferiti.splice(i, i);
+					console.log(temp);
 				}
 			}
 			temp.save(function(err, data){

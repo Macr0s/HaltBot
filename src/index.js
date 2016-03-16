@@ -27,3 +27,4 @@ bot.onText(/^\/preferiti$/, comandoPreferiti.comandoPreferiti);
 bot.onText(/^\/add[0-9]{1,5}$/, comandoPreferiti.addPreferito);
 
 bot.onText(/^\/remove[0-9]{1,5}$/, comandoPreferiti.removePreferito);
+
