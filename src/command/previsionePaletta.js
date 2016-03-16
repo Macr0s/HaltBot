@@ -6,7 +6,6 @@ module.exports = function previsionePaletta(msg, match) {
 	var paletta = msg.text;
 	paletta = paletta.substring(1, paletta.length);
 	paletta = parseInt(paletta);
-
   	var value = tempiPaletta.getTempiPaletta(function(value){
 	    // Results of the method response
 	    var mess = "";
@@ -15,8 +14,8 @@ module.exports = function previsionePaletta(msg, match) {
 	    else {
 		    var temp = value.risposta.arrivi;
 		    if (temp.length == 0) {
-		    	mongo({telegramId:msg.from.id.toString(), command:[{name:"previsione_paletta"+paletta.toString(), date: new Date()}]}, msg.from.id);
-		    	bot.sendMessage(msg.chat.id, "Nessuna informazione disponibile");
+		    	mongo.persist({telegramId:msg.from.id.toString(), command:[{name:"previsione_paletta"+paletta.toString(), date: new Date()}], preferiti: []}, msg.from.id);
+		    	bot.sendMessage(msg.chat.id, "Nessuna informazione disponibile.\n\nVuoi aggiungere questa fermata ai preferiti: /add"+paletta);
 		    }
 		    else {
 		    	mess = "🚩 "+temp[0].nome_palina+".\n";
@@ -26,7 +25,8 @@ module.exports = function previsionePaletta(msg, match) {
 			    	else 
 			    		mess = mess+"🚌 "+temp[element].linea+" :\t"+temp[element]["distanza_fermate"]+" fermate attesa "+ temp[element]["tempo_attesa"]+" minuti."+"\n";
 			    }
-			    mongo({telegramId:msg.from.id.toString(), name:msg.chat.first_name+" "+msg.chat.last_name, command:[{name:"previsione_paletta"+paletta.toString(), date: new Date()}]}, msg.from.id);
+			    mongo.persist({telegramId:msg.from.id.toString(), name:msg.chat.first_name+" "+msg.chat.last_name, command:[{name:"previsione_paletta"+paletta.toString(), date: new Date()}], preferiti: []}, msg.from.id);
+			    mess = mess + "\n\nVuoi aggiungere questa fermata ai preferiti: /add"+paletta;
 			    bot.sendMessage(msg.chat.id, mess);
 			}
 		}

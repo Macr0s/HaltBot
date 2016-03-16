@@ -15,7 +15,7 @@ module.exports = {
 				bot.sendMessage(msg.chat.id, 'mi dispiace ma non ho trovato nessuna linea di autobus');
 			}
 			else {
-				mongo({telegramId:msg.from.id.toString(), name:msg.chat.first_name+" "+msg.chat.last_name, command:[{name:"previsione_linea"+linea, date: new Date()}]}, msg.from.id);
+				mongo.persist({telegramId:msg.from.id.toString(), name:msg.chat.first_name+" "+msg.chat.last_name, command:[{name:"previsione_linea"+linea, date: new Date()}], preferiti: []}, msg.from.id);
 				for(var element in percorsi) {
 					if(percorsi[element].id_linea == linea) {
 						all_capolinea.push([percorsi[element].id_percorso+" - "+ percorsi[element].direzione + " "+ percorsi[element].carteggio_dec]);
