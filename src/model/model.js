@@ -67,13 +67,17 @@ module.exports = {
 	}, 
 	deletePreferito: function(userId, preferito) {
 		User.find({telegramId: userId}, function(err, user){
-			var i = 0;
+			var i = 1;
 			var temp = user[0];
 			var preferiti = user[0].preferiti;
-			for(i=0; i<preferiti.length; i++) {
-				if(preferiti[i].indexOf(preferito) > -1) {
-					temp.preferiti.splice(i, i);
-					console.log(temp);
+			if(preferiti[0].indexOf(preferito) > -1)
+				temp.preferiti.splice(0,1);
+			else {
+				for(i=1; i<preferiti.length; i++) {
+					if(preferiti[i].indexOf(preferito) > -1) {
+						temp.preferiti.splice(i, i);
+						console.log(temp);
+					}
 				}
 			}
 			temp.save(function(err, data){
